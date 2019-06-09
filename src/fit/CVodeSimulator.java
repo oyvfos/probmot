@@ -44,7 +44,7 @@ public class CVodeSimulator {
 	private LinearSolver linearSolver;
 
 	private Pointer<?> cvode;
-	private ODEModel odeModel;
+	private ODEModel1 odeModel;
 	private Pointer<Double> tret;
 
 	public CVodeSimulator(ODESolver odeSolver, NonlinearSolver nonlinearSolver) {
@@ -60,17 +60,17 @@ public class CVodeSimulator {
 		CvodeLibrary.CVodeSetMaxNumSteps(cvode, steps);
 	}
 
-	public void initialize(ODEModel odeModel) {
+	public void initialize(ODEModel1 odeModel) {
 		this.odeModel = odeModel;
 
 		CvodeLibrary.CVodeInit(cvode, odeModel.toPointer(), odeModel.getT0(), odeModel.getY());
 	}
 	
-	public void setODEModel(ODEModel odeModel){
+	public void setODEModel(ODEModel1 odeModel){
 		this.odeModel = odeModel;
 	}
 
-	public void reinitialize(ODEModel odeModel) {
+	public void reinitialize(ODEModel1 odeModel) {
 		this.odeModel=odeModel;
 		CvodeLibrary.CVodeReInit(cvode, odeModel.getT0(), odeModel.getY());
 	}
@@ -174,7 +174,7 @@ public class CVodeSimulator {
 		}
 //		CVodeSimulator.logger.info("Simulation ended");
 
-		String[] headers = (String[]) ArrayUtils.add(odeModel.getStateNames(), 0, odeModel.getTimeName());
+		String[] headers = (String[]) ArrayUtils.add(odeModel.getStateNames(), 0, odeModel.getTimeCol());
 		Dataset dataset = new Dataset(simulated, headers);
 		return dataset;
 
